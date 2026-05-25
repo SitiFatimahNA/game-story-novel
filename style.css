@@ -1,0 +1,357 @@
+/* Import font bergaya pixel/retro */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+body {
+    background-color: #05050a;
+    font-family: 'VT323', monospace;
+    color: #d1d5db;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container Game Utama (Rasio 16:9 ala Retro Browser) */
+#game-container {
+    position: relative;
+    width: 960px;
+    height: 540px;
+    background-color: #000;
+    overflow: hidden;
+    border: 4px solid #1f2937;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+}
+
+/* Efek VHS / Scanline Ringan */
+.vhs-effect::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 20;
+    background-size: 100% 4px, 3px 100%;
+    pointer-events: none;
+}
+
+/* Manajemen Layar (Screens) */
+.screen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 5;
+}
+
+.screen.active {
+    display: block;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ================= AMBIENCE & OVERLAYS ================= */
+
+/* Efek Kabut Berjalan */
+.fog-overlay {
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    background-color: rgba(40, 50, 70, 0.15);
+    opacity: 0.4;
+    z-index: 10;
+    animation: moveFog 25s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes moveFog {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Efek Lampu Berkedip Khas Horor */
+.flicker-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 11;
+    pointer-events: none;
+    animation: flickerAnimation 4s infinite;
+}
+
+@keyframes flickerAnimation {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 0.1; }
+    20%, 24%, 55% { opacity: 0.35; }
+}
+
+/* ================= MAIN MENU ================= */
+#main-menu {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, #111827 0%, #030712 100%);
+    text-align: center;
+}
+
+#main-menu.active {
+    display: flex;
+}
+
+.menu-title h1 {
+    font-size: 5rem;
+    color: #991b1b;
+    text-shadow: 3px 3px 0px #000;
+    letter-spacing: 5px;
+    animation: textGlitch 3s infinite;
+}
+
+.menu-title .subtitle {
+    font-size: 1.8rem;
+    color: #6b7280;
+    margin-bottom: 40px;
+}
+
+.menu-options button {
+    display: block;
+    width: 200px;
+    padding: 10px;
+    margin: 10px auto;
+    background-color: #1f2937;
+    border: 2px solid #4b5563;
+    color: #e5e7eb;
+    font-family: 'VT323', monospace;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.menu-options button:hover:not(:disabled) {
+    background-color: #991b1b;
+    color: #fff;
+    border-color: #ef4444;
+    transform: scale(1.05);
+}
+
+.menu-options button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ================= SCENE & SPRITES ================= */
+#scene-bg {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: filter 1s ease-in-out, background-image 0.5s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* Simulasi Side-View Visual */
+#sprite-container {
+    position: absolute;
+    bottom: 90px;
+    width: 100%;
+    height: 80%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.sprite {
+    position: absolute;
+    bottom: -10px;
+    width: 600px;
+    height: 355px;
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom;
+
+    transition: all 0.1s ease;
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
+}
+
+#char-sprite {
+    left: 5%;
+    /* Placeholder jika belum ada gambar asset */
+    background-image: url('assets/character/raka_idle.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-top: 2px solid #3b82f6;
+}
+
+#enemy-sprite {
+    right: 5%;
+    width: 850px;
+    height: 400px;
+
+    display: none;
+
+    background-image: url('assets/enemy/pocong_jumpscare.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    transition: all 0.20s ease;
+
+    filter: drop-shadow(0 0 15px rgba(0,0,0,0.9));
+}
+
+/* Variasi Posisi Musuh */
+#enemy-sprite.far {
+    right: 40%;
+    transform: scale(0.4);
+    opacity: 0.5;
+    filter: blur(2px);
+}
+
+#enemy-sprite.near {
+    right: 20%;
+    transform: scale(1);
+    opacity: 1;
+    filter: blur(0);
+}
+
+/* ================= UI SYSTEMS ================= */
+
+/* Kotak Dialog Visual Novel */
+#dialog-box {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 110px;
+    background-color: rgba(10, 15, 30, 0.85);
+    border: 3px solid #374151;
+    padding: 15px;
+    cursor: pointer;
+    z-index: 15;
+}
+
+#dialog-box:hover {
+    border-color: #4b5563;
+}
+
+#char-name {
+    font-size: 1.4rem;
+    color: #f59e0b;
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-shadow: 1px 1px #000;
+}
+
+#dialog-text {
+    font-size: 1.3rem;
+    line-height: 1.2;
+    color: #e5e7eb;
+}
+
+.click-prompt {
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+    color: #6b7280;
+    animation: bounce 0.8s infinite alternate;
+}
+
+@keyframes bounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-4px); }
+}
+
+/* Kontainer Pilihan Dialog */
+#choice-container {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    z-index: 16;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.choice-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(17, 24, 39, 0.95);
+    border: 2px solid #4b5563;
+    color: #e5e7eb;
+    font-family: 'VT323', monospace;
+    font-size: 1.4rem;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.2s;
+}
+
+.choice-btn:hover {
+    background-color: #991b1b;
+    border-color: #ef4444;
+    color: #fff;
+    padding-left: 20px;
+}
+
+/* ================= EFFECTS & ANIMATIONS ================= */
+
+/* Layar Jumpscare */
+#jumpscare-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    background-size: cover;
+    background-position: center;
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+}
+
+/* Animasi Guncangan Layar (Screen Shake) */
+.shake {
+    animation: shakeAnim 0.3s cubic-bezier(.36,.07,.19,.97) both infinite;
+}
+
+@keyframes shakeAnim {
+    10%, 90% { transform: translate3d(-2px, -2px, 0); }
+    20%, 80% { transform: translate3d(3px, 3px, 0); }
+    30%, 50%, 70% { transform: translate3d(-5px, 2px, 0); }
+    40%, 60% { transform: translate3d(5px, -3px, 0); }
+}
+
+/* Animasi Glitch Merah Jumpscare */
+.glitch-red {
+    animation: glitchRedAnim 0.1s infinite;
+}
+
+@keyframes glitchRedAnim {
+    0% { filter: invert(0) sepia(1) saturate(5) hue-rotate(340deg); opacity: 0.9; }
+    50% { filter: invert(0.2) sepia(1) saturate(8) hue-rotate(350deg); opacity: 1; }
+    100% { filter: invert(0) sepia(1) saturate(5) hue-rotate(340deg); opacity: 0.9; }
+}
+
+/* Text Glitch Efek di Menu */
+@keyframes textGlitch {
+    0%, 100% { transform: skew(0deg); }
+    20% { transform: skew(-3deg); color: #ef4444; }
+    21% { transform: skew(5deg); }
+    23% { transform: skew(0deg); }
+    60% { transform: skew(3deg); color: #7f1d1d; }
+    62% { transform: skew(-2deg); }
+}

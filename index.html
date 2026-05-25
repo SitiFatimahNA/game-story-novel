@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desa Sunyi: Misteri 1990</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Game Container Utama -->
+    <div id="game-container" class="vhs-effect">
+        
+        <!-- Efek Atmosfer: Kabut Berjalan -->
+        <div class="fog-overlay"></div>
+        <div class="flicker-overlay"></div>
+
+        <!-- ================= MAIN MENU ================= -->
+        <div id="main-menu" class="screen active">
+            <div class="menu-title">
+                <h1>DESA SUNYI</h1>
+                <p class="subtitle">Misteri Tahun 1990</p>
+            </div>
+            <div class="menu-options">
+                <button onclick="startGame()">START GAME</button>
+                <button onclick="loadGame()" id="continue-btn" disabled>CONTINUE</button>
+                <button onclick="exitGame()">EXIT</button>
+            </div>
+        </div>
+
+        <!-- ================= GAMEPLAY SCREEN ================= -->
+        <div id="game-screen" class="screen">
+            <!-- Background Scene -->
+            <div id="scene-bg"></div>
+
+            <!-- Karakter & Monster Sprite Container -->
+            <div id="sprite-container">
+                <div id="char-sprite" class="sprite"></div>
+                <div id="enemy-sprite" class="sprite"></div>
+            </div>
+
+            <!-- Jumpscare Overlay -->
+            <div id="jumpscare-overlay"></div>
+            <div id="game-container" class="vhs-effect">
+        </div>
+
+            <!-- UI Visual Novel (Kotak Dialog) -->
+            <div id="dialog-box" onclick="nextDialog()">
+                <div id="char-name">RAKA</div>
+                <div id="dialog-text">Malam ini dingin sekali...</div>
+                <div class="click-prompt">▼</div>
+            </div>
+
+            <!-- Pilihan Dialog (Choice System) -->
+            <div id="choice-container" class="hidden">
+                <!-- Tombol pilihan akan di-generate otomatis oleh JavaScript -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ================= AUDIO SYSTEM ================= -->
+    <!-- Catatan: Ganti src dengan file audio asli Anda di folder assets/sound/ -->
+    <audio id="bgm-crickets" loop src="assets/sound/crickets.mp3"></audio>
+    <audio id="bgm-wind" loop src="assets/sound/wind.mp3"></audio>
+    <audio id="sfx-glitch" src="assets/sound/glitch.mp3"></audio>
+    <audio id="sfx-jumpscare" src="assets/sound/jumpscare.mp3"></audio>
+    <audio id="sfx-whisper" src="assets/sound/whisper.mp3"></audio>
+
+    <!-- Link ke Logika Game -->
+    <script src="script.js"></script>
+</body>
+</html>
