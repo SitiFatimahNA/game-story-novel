@@ -22,9 +22,11 @@ const continueBtn = document.getElementById("continue-btn");
 // Ambil DOM Audio
 const bgmCrickets = document.getElementById("bgm-crickets");
 const bgmWind = document.getElementById("bgm-wind");
+const bgmRain = document.getElementById("bgm-rain");
 const sfxGlitch = document.getElementById("sfx-glitch");
 const sfxJumpscare = document.getElementById("sfx-jumpscare");
 const sfxWhisper = document.getElementById("sfx-whisper");
+const sceneBgm = document.getElementById("scene-bgm");
 
 // ================= DATABASE CERITA (STORY DATABASE) =================
 // Struktur database visual novel sederhana berbasis objek
@@ -34,8 +36,9 @@ const storyData = {
         name: "RAKA",
         text: "(Hujan lebat mengguyur jendelaku. Tiba-tiba mesin mobil tuaku terbatuk lalu mati total... Tepat di depan sebuah gapura tua.)",
         bg: "mogok.png", // Placeholder warna biru/abu gelap untuk 'Gerbang Desa'
-        char: "",
+        char: "none",
         enemy: "none",
+        audio: "Scene1.mp3",
         next: "opening_2"
     },
     opening_2: {
@@ -43,15 +46,17 @@ const storyData = {
         text: "Sial... Mogok di tempat seperti ini. 'Desa Sunyi'... Benar-benar sesuai namanya. Sepi sekali.",
         bg: "sial.png",
         char: "none",
-        enemy: "", // Muncul jauh di kabut
+        enemy: "none", // Muncul jauh di kabut
+        audio:"Scene2.mp3",
         next: "opening_3"
     },
     opening_3: {
         name: "RAKA",
         text: "(Saat turun memeriksa kap mobil, pandanganku tertuju ke arah jalanan berkabut di balik gapura... Ada bayangan seseorang berdiri diam.)",
         bg: "turun.png",
-        char: "",
-        enemy: "", // Muncul jauh di kabut
+        char: "none",
+        enemy: "none", // Muncul jauh di kabut
+        audio:"Scene3.mp3",
         next: "opening_choices"
     },
     
@@ -59,9 +64,10 @@ const storyData = {
     opening_choices: {
         name: "RAKA",
         text: "Halo? Permisi Pak/Bu... Bisa minta tolong?",
-        bg: "gerbang_desa.png",
-        char: "raka_bingung.png",
-        enemy: "pocong_dekat.png",
+        bg: "permisi.png",
+        char: "none",
+        enemy: "none",
+        audio:"Scene4.mp3",
         choices: [
             { text: "Berjalan mendekati bayangan tersebut", next: "pilihan_dekat", points: 2 },
             { text: "Tetap di dekat mobil dan panggil lagi", next: "pilihan_diam", points: 0 }
@@ -72,15 +78,16 @@ const storyData = {
     pilihan_dekat: {
         name: "RAKA",
         text: "(Langkahku semakin berat melintasi kabut tebal desa. Bayangan itu tegak kaku... Bau busuk menyengat tiba-tiba menusuk hidung.)",
-        bg: "jalan_desa.png", 
-        char: "raka_bingung.png",
-        enemy: "pocong_dekat.png",
+        bg: "jalan.png", 
+        char: "none",
+        enemy: "none",
+        audio:"Scene5.mp3",
         next: "trigger_jumpscare_1"
     },
     trigger_jumpscare_1: {
         name: "???",
         text: "M U L A I... M E L I N T A S . . .",
-        bg: "pocong_jumpscare.png", // Placeholder visual jumpscare mendadak
+        bg: "none", // Placeholder visual jumpscare mendadak
         char: "none",
         enemy: "pocong_jumpscare.png",
         jumpscare: true, // Menandakan scene ini memicu jumpscare acak/pasti
@@ -92,9 +99,10 @@ const storyData = {
     pilihan_diam: {
         name: "RAKA",
         text: "Tidak ada jawaban... Bayangan itu menghilang secara aneh di dalam kabut tebal. Sebaiknya aku berjalan masuk mencari pemukiman.",
-        bg: "gerbang_desa.png",
-        char: "raka_idle.png",
+        bg: "hilang.png",
+        char: "none",
         enemy: "none",
+        audio:"Scene7.mp3",
         next: "desa_center"
     },
 
@@ -102,16 +110,18 @@ const storyData = {
     desa_center: {
         name: "RAKA",
         text: "Rumah-rumah kayu ini kosong... jendelanya hancur. Seperti sudah ditinggalkan sejak tahun 90-an. Kemana perginya semua orang?",
-        bg: "jalan_desa.png", // Placeholder 'Rumah Kayu'
-        char: "raka_bingung.png",
+        bg: "rumah_kosong.png", // Placeholder 'Rumah Kayu'
+        char: "none",
         enemy: "none",
+        audio:"Scene8.mp3",
         next: "desa_choices"
     },
     desa_choices: {
         name: "RAKA",
         text: "Di sebelah kiri ada jalan menuju kuburan tua desa, di sebelah kanan ada hutan bambu yang gelap gulita. Mana yang harus kupilih?",
-        bg: "jalan_desa.png",
-        char: "raka_bingung.png",
+        bg: "dua_jalan.png",
+        char: "none",
+        audio:"Scene9.mp3",
         choices: [
             { text: "Periksa arah kuburan tua desa", next: "kuburan_scene", points: 1 },
             { text: "Masuk ke area hutan bambu", next: "hutan_scene", points: 3 }
@@ -122,16 +132,18 @@ const storyData = {
     kuburan_scene: {
         name: "RAKA",
         text: "Banyak nisan tua tanpa nama. Tunggu... ada sebuah buku catatan usang tergeletak di depan sebuah makam yang tanahnya masih basah.",
-        bg: "kuburan.png", // Placeholder 'Kuburan'
-        char: "raka_idle.png",
+        bg: "nisan.png", // Placeholder 'Kuburan'
+        char: "none",
         enemy: "none",
+        audio:"Scene10.mp3",
         next: "kuburan_choices"
     },
     kuburan_choices: {
         name: "RAKA",
         text: "Catatan ini berisi nama-nama warga dan ritual tumbal kepala desa! Apa yang harus kulakukan?",
-        bg: "kuburan.png",
-        char: "raka_bingung.png",
+        bg: "catatan.png",
+        audio:"Scene11.mp3",
+        char: "none",
         choices: [
             { text: "Ambil buku bukti dan segera lari keluar desa", next: "ending_good", points: 0 },
             { text: "Cari Mushola tua untuk bersembunyi & membaca lebih dalam", next: "ending_true", points: 5 }
@@ -142,17 +154,19 @@ const storyData = {
     hutan_scene: {
         name: "RAKA",
         text: "Suara bambu bergesekan terdengar seperti bisikan tajam di telingaku... Aku merasa berputar-putar di tempat yang sama.",
-        bg: "hutan_bambu.png", // Placeholder 'Hutan Bambu'
-        char: "raka_idle.png",
-        enemy: "pocong_dekat.png",
+        bg: "berbisik.png", // Placeholder 'Hutan Bambu'
+        char: "none",
+        enemy: "none",
+        audio:"Scene12.mp3",
         next: "hutan_choices"
     },
     hutan_choices: {
         name: "RAKA",
         text: "Tiba-tiba kabut menebal secara instan hingga aku tak bisa melihat tanganku sendiri! Seseorang berbisik tepat di belakang leherku...",
         bg: "hutan_bambu.png",
-        char: "raka_takut.png",
-        enemy: "pocong_dekat.png",
+        char: "none",
+        enemy: "none",
+        audio:"Scene13.mp3",
         choices: [
             { text: "Menoleh ke belakang", next: "ending_bad", points: 10 },
             { text: "Terus berlari lurus tanpa menoleh", next: "ending_secret", points: -5 }
@@ -166,6 +180,7 @@ const storyData = {
         bg: "good_ending.png",
         char: "none",
         enemy: "none",
+        audio:"GoodEnding.mp3",
         isEnding: true
     },
     ending_bad: {
@@ -175,6 +190,7 @@ const storyData = {
         char: "none",
         enemy: "none",
         jumpscare: true,
+        audio:"BadEnding.mp3",
         isEnding: true
     },
     ending_true: {
@@ -183,6 +199,7 @@ const storyData = {
         bg: "true_ending.png", // Placeholder 'Mushola'
         char: "none",
         enemy: "none",
+        audio:"TrueEnding.mp3",
         isEnding: true
     },
     ending_secret: {
@@ -191,6 +208,7 @@ const storyData = {
         bg: "secret_ending.png",
         char: "none",
         enemy: "none",
+        audio:"SecretEnding.mp3",
         isEnding: true
     }
 };
@@ -213,17 +231,21 @@ function startGame() {
 // Mengatur Suara Latar
 function playAmbience() {
     bgmCrickets.currentTime = 0;
-    bgmWind.currentTime = 0;
+    bgmRain.currentTime = 0;
     
     // Metode play modern (mencegah error autoplay block browser)
     bgmCrickets.play().catch(e => console.log("Audio di-block browser, perlu interaksi klik"));
-    bgmWind.play().catch(e => console.log("Audio di-block browser"));
-    bgmCrickets.volume = 0.5;
-    bgmWind.volume = 0.3;
+    bgmRain.play().catch(e => console.log("Audio di-block browser"));
+    
+    bgmCrickets.volume = 0.2;
+    bgmRain.volume = 0.2;
+    
 }
 
 // Update Tampilan Berdasarkan Database State
 function updateScene() {
+    choiceContainer.innerHTML = ""; // Menghapus semua tombol lama
+    choiceContainer.classList.add("hidden"); // Menyembunyikan kontainer pilihan
     const scene = storyData[currentState];
     if (!scene) return;
 
@@ -232,6 +254,28 @@ function updateScene() {
         localStorage.setItem("desa_sunyi_save", currentState);
         continueBtn.disabled = false;
     }
+
+    // ================= AUDIO PER SCENE =================
+if (scene.audio) {
+
+    const newAudio = `assets/sound/${scene.audio}`;
+
+    // Ganti audio hanya jika berbeda
+    if (!sceneBgm.src.includes(scene.audio)) {
+
+        sceneBgm.pause();
+
+        sceneBgm.src = newAudio;
+
+        sceneBgm.currentTime = 0;
+
+        sceneBgm.volume = 1;
+
+        sceneBgm.play().catch(e => {
+            console.log("Audio diblok browser");
+        });
+    }
+}
 
     // Set Nama & Background
 charName.innerText = scene.name;
@@ -276,20 +320,19 @@ if (scene.char !== "none") {
 }
 
     // Jalankan Efek Mengetik Teks (Typewriter)
-    displayTextWithTyping(scene.text);
-
-    // Tampilkan Pilihan atau Hilangkan Kotak Dialog jika ada pilihan cabang
+    displayTextWithTyping(scene.text, () => {
+    // KODE INI HANYA AKAN JALAN SETELAH TEKS SELESAI DIKETIK
     if (scene.choices) {
-        dialogBox.style.pointerEvents = "none"; // Matikan klik pada kotak dialog utama
+        dialogBox.style.pointerEvents = "none";
         displayChoices(scene.choices);
     } else {
         dialogBox.style.pointerEvents = "auto";
-        choiceContainer.classList.add("hidden");
     }
+});
 }
 
 // Logika Mengetik Teks Visual Novel
-function displayTextWithTyping(text) {
+function displayTextWithTyping(text, onComplete) {
     clearInterval(typeTimeout);
     isTyping = true;
     currentText = text;
@@ -303,8 +346,10 @@ function displayTextWithTyping(text) {
         } else {
             clearInterval(typeTimeout);
             isTyping = false;
+            // Panggil callback setelah teks selesai diketik
+            if (onComplete) onComplete(); 
         }
-    }, 25); // Kecepatan ketik (milidetik per karakter)
+    }, 70);
 }
 
 // Fungsi Klik untuk Melanjutkan Dialog
@@ -314,6 +359,13 @@ function nextDialog() {
         clearInterval(typeTimeout);
         dialogText.innerHTML = currentText;
         isTyping = false;
+
+        const scene = storyData[currentState];
+        if (scene.choices) {
+            dialogBox.style.pointerEvents = "none";
+            displayChoices(scene.choices);
+        }
+        
         return;
     }
 
@@ -392,7 +444,9 @@ function backToMainMenu() {
     gameScreen.classList.remove("active");
     mainMenu.classList.add("active");
     bgmCrickets.pause();
-    bgmWind.pause();
+    bgmRain.pause();
+    sceneBgm.pause();
+    sceneBgm.currentTime = 0;
 }
 
 // Tombol Keluar (Simulasi)
@@ -406,6 +460,7 @@ document.addEventListener("keydown", (e) => {
         const scene = storyData[currentState];
         // Pastikan tidak menekan tombol saat sistem pilihan bercabang sedang aktif
         if (e.code === "Space" || e.code === "Enter") {
+            e.preventDefault();
             if (!scene.choices) {
                 nextDialog();
             }
